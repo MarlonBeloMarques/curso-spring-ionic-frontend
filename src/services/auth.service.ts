@@ -27,6 +27,17 @@ export class AuthService{
             });
     }
 
+    // o token é inserido automaticamente pelo interceptor
+    refreshToken(){
+        return this.http.post(
+            `${API_CONFIG.baseUrl}/auth/refresh_token`, 
+            {},
+            {
+               observe : 'response', // vai pegar o header  da resposta
+               responseType: "text", // vai pegar uma resposta de corpo vazio, para que o framework nao tente fazer um parse no json
+            });
+    }
+
     successfulLogin(authorizationValue : string){
         let tok = authorizationValue.substring(6);
         let user : LocalUser = {
