@@ -6,11 +6,11 @@
   <form>
     <ion-item>
       <ion-label stacked>Email</ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input [(ngModel)]="creds.email" name="email" type="text"></ion-input> <!--pega valor-->
     </ion-item>
     <ion-item>
       <ion-label stacked>Senha</ion-label>
-      <ion-input type="password"></ion-input>
+      <ion-input [(ngModel)]="creds.senha" name="senha" type="password"></ion-input> <!--pega valor-->
     </ion-item>
 
     <button (click)="login()" ion-button block>Entrar</button>
