@@ -11,7 +11,7 @@
   <ion-list>
     <button ion-item *ngFor="let item of items">
       <ion-thumbnail item-start>
-        <img [src]="item.imageUrl || 'assets/imgs/prod.jpg'">
+        <img [src]="item.imageUrl || 'assets/imgs/prod.jpg'"> <!--se a imagem existir, ele da preferencia pra ela, se nao mostra a prod-->
       </ion-thumbnail>
       <h2>{{item.nome}}</h2>
       <p>{{item.preco | currency}}</p> <!--currency formata o numero ao estilo moeda-->
