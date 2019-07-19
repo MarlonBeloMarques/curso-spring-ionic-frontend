@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpEvent, HttpHandler, HttpRequest, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AlertController } from 'ionic-angular';
+import { FieldMessage } from '../models/fieldmessage';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -36,6 +37,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                     this.handle403();
                     break;
 
+                case 422:
+                    this.handle422(errorObj);
+                    break;
+
                 default:
                     this.handleDefaultError(errorObj);
                     break;
@@ -43,6 +48,20 @@ export class ErrorInterceptor implements HttpInterceptor {
 
             return Observable.throw(errorObj);
         }) as any;
+    }
+
+    handle422(errorObj) {
+        let alert = this.alertCtrl.create({
+            title: 'Erro 422: Validação',
+            message: this.listErrors(errorObj.errors),
+            enableBackdropDismiss: false,
+            buttons: [
+                {
+                    text: 'Ok'
+                }
+            ]
+        });
+        alert.present();
     }
 
     handleDefaultError(errorObj){
@@ -63,7 +82,9 @@ export class ErrorInterceptor implements HttpInterceptor {
             message: 'Email ou senha incorretos',
             enableBackdropDismiss: false,
             buttons: [
-                {text: 'Ok'}
+                {
+                    text: 'Ok'
+                }
             ]
         });
         alert.present();
@@ -71,6 +92,14 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     handle403(){
         this.storage.setLocalUser(null);
+    }
+
+    private listErrors(messages : FieldMessage[]) : string {
+        let s : string = '';
+        for (var i=0; i<messages.length; i++) {
+            s = s + '<p><strong>' + messages[i].fieldName + "</strong>: " + messages[i].message + '</p>';
+        }
+        return s;
     }
 
 } 
