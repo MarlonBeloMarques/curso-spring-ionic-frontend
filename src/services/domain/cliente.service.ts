@@ -39,17 +39,18 @@ export class ClienteService{
         });
     }
 
-    uploadPicture(picture){
+    uploadPicture(picture) {
         let pictureBlob = this.imageUtilService.dataUriToBlob(picture);
-        let formData : FormData = new FormData(); // utilizado no postman para selecionar um tipo de arquivo
+        let formData : FormData = new FormData();
         formData.set('file', pictureBlob, 'file.png');
-
-        return this.http.post(`${API_CONFIG.baseUrl}/clientes/picture`,
-        formData,
-        {
-            observe: 'response',
-            responseType: 'text'
-        });
+        return this.http.post(
+            `${API_CONFIG.baseUrl}/clientes/picture`, 
+            formData,
+            { 
+                observe: 'response', 
+                responseType: 'text'
+            }
+        ); 
     }
 
 }
