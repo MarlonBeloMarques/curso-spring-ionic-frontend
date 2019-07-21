@@ -9,7 +9,7 @@
 
 <ion-content padding>
   <ion-avatar>
-    <img class="circle" [src]="cliente?.imageUrl || 'assets/imgs/avatar-blank.png'"> <!--OU VAI SER  O CAMPO IMAGE URL ou vai ser a imagem do campo vazio, obs: o interrogação significa se nao encontrar o valor, nao vai da erro na pagina-->
+    <img class="circle" [src]="profileImage"> <!--OU VAI SER  O CAMPO IMAGE URL ou vai ser a imagem do campo vazio, obs: o interrogação significa se nao encontrar o valor, nao vai da erro na pagina-->
   </ion-avatar>
   <h2 text-center>{{cliente?.nome}}</h2>
   <p text-center>{{cliente?.email}}</p>

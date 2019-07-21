@@ -5,6 +5,7 @@ import { ClienteDTO } from '../../models/cliente.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
 import { API_CONFIG } from '../../config/api.config';
 import { CameraOptions, Camera } from '@ionic-native/camera';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @IonicPage()
 @Component({
@@ -15,6 +16,7 @@ export class ProfilePage {
 
   cliente: ClienteDTO;
   picture: string;
+  profileImage;
   cameraOn: boolean = false;
 
   constructor(
@@ -22,8 +24,12 @@ export class ProfilePage {
     public navParams: NavParams,
     public storage: StorageService,
     public clienteService: ClienteService,
-    public camera: Camera) {
-  }
+    public camera: Camera,
+    public sanitizer: DomSanitizer) { // autorizar o envio da imagem
+ 
+      this.profileImage = 'assets/imgs/avatar-blank.png'; // garantir que sempre terá valor
+
+    }
 
   ionViewDidLoad() {
     this.loadData();
@@ -52,8 +58,24 @@ export class ProfilePage {
     this.clienteService.getImageBucket(this.cliente.id)
       .subscribe(res => {
         this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
+        this.blobToDataURL(res).then(dataUrl => {
+          let str : string = dataUrl as string;
+          this.profileImage = this.sanitizer.bypassSecurityTrustUrl(str);
+        })
       },
-      error => {});
+      error => {
+        this.profileImage = 'assets/imgs/avatar-blank.png';
+      });
+  }
+
+  //converte blob para base64
+  blobToDataURL(blob){
+    return new Promise((fulfill, reject)=>{
+      let reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = (e) => fulfill(reader.result);
+      reader.readAsDataURL(blob);
+    })
   }
 
   //codigo padrao camera com alterações
@@ -102,7 +124,7 @@ export class ProfilePage {
     this.clienteService.uploadPicture(this.picture)
       .subscribe(response => {
         this.picture = null;
-        this.loadData();
+        this.getImageIfExists();
       },
       error => {
       });
